@@ -70,6 +70,13 @@ class ProductController extends Controller
         return new ProductDetailResource($product);
     }
 
+    public function view($id)
+    {
+        $product = Product::with('categories', 'images')->findOrFail($id);
+
+        return new ProductDetailResource($product);
+    }
+
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [

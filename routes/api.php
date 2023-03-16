@@ -13,6 +13,7 @@ Route::controller(CategoryController::class)->group(function () {
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/product', 'index');
+    Route::get('/product/{id}', 'view');
     Route::post('/product/create', 'store');
     Route::post('/product/update/{id}', 'update');
 });
