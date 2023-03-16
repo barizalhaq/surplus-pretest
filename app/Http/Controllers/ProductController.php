@@ -69,4 +69,30 @@ class ProductController extends Controller
 
         return new ProductDetailResource($product);
     }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|unique:products,name,' . $id,
+            'description' => 'required|string',
+            'enable' => 'required|boolean',
+            'category_ids' => 'required|array|min:1',
+            'category_ids.*' => 'required|regex:/^[0-9]*$/u'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $product = Product::findOrFail($id);
+        $product->update(
+            $request->except('category_ids')
+        );
+
+        $product->categories()->sync($request->category_ids);
+
+        return new ProductDetailResource($product);
+    }
 }
