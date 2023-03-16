@@ -10,6 +10,14 @@ class Image extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name', 'file', 'enable'
+    ];
+
+    protected $attributes = [
+        'enable' => true
+    ];
+
     /**
      * The products that belong to the Image
      *
