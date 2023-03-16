@@ -102,4 +102,10 @@ class ProductController extends Controller
 
         return new ProductDetailResource($product);
     }
+
+    public function delete($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+    }
 }

@@ -17,6 +17,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product/{id}', 'view');
     Route::post('/product/create', 'store');
     Route::post('/product/update/{id}', 'update');
+    Route::delete('/product/delete/{id}', 'delete');
 });
 
 Route::controller(ImageController::class)->group(function () {
