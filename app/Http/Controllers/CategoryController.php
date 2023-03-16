@@ -64,4 +64,14 @@ class CategoryController extends Controller
 
         return new CategoryDetailResource($updatedCategory);
     }
+
+    public function delete($id)
+    {
+        $category = Category::findOrFail($id);
+        if ($category->products()->exists()) {
+            return response()->json(['error' => 'cannot delete the requested category, it\'s dependable by products'], 422);
+        }
+
+        $category->delete();
+    }
 }

@@ -9,6 +9,7 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/category', 'index');
     Route::post('/category/create', 'store')->middleware('json');
     Route::put('/category/update/{id}', 'update')->middleware('json');
+    Route::delete('/category/delete/{id}', 'delete');
 });
 
 Route::controller(ProductController::class)->group(function () {
