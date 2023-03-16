@@ -43,4 +43,15 @@ class ImageController extends Controller
 
         return response()->json(['error' => 'cannot proceed update image, please try again'], 422);
     }
+
+    public function delete($id)
+    {
+        $image = Image::findOrFail($id);
+        if (Storage::delete('product_images/' . $image->name)) {
+            if ($image->products()->exists()) {
+                $image->products()->detach();
+            }
+            $image->delete();
+        }
+    }
 }

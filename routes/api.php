@@ -22,4 +22,5 @@ Route::controller(ProductController::class)->group(function () {
 
 Route::controller(ImageController::class)->group(function () {
     Route::post('/product/image/update/{id}', 'update');
+    Route::delete('/product/image/delete/{id}', 'delete');
 });
