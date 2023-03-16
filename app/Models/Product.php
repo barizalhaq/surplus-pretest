@@ -40,9 +40,11 @@ class Product extends Model
             try {
                 $product->categories()->detach();
 
-                $productImageIds = $product->images()->pluck('id')->toArray();
-                $product->images()->detach();
-                Image::whereIn('id', $productImageIds)->delete();
+                if ($product->images()->exists()) {
+                    $productImageIds = $product->images()->pluck('id')->toArray();
+                    $product->images()->detach();
+                    Image::whereIn('id', $productImageIds)->delete();
+                }
 
                 DB::commit();
             } catch (\Exception $th) {
