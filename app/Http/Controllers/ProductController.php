@@ -108,4 +108,46 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
     }
+
+    public function append_image(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'images' => 'required|array|min:1',
+            'images.*' => 'required|image|mimes:jpg,png,jpeg|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $product = Product::findOrFail($id);
+        $images = $request->file('images');
+
+        DB::beginTransaction();
+
+        try {
+            $imageIDs = [];
+            foreach ($images as $image) {
+                $imageName = time() . "_" . $image->getClientOriginalName();
+                $path = Storage::putFileAs('product_images', $image, $imageName);
+                $createdImage = Image::create([
+                    'name' => $imageName,
+                    'file' => Storage::url($path),
+                ]);
+
+                array_push($imageIDs, $createdImage->id);
+            }
+
+            $product->images()->attach($imageIDs);
+
+            DB::commit();
+        } catch (\Exception $th) {
+            DB::rollBack();
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+
+        return new ProductDetailResource($product);
+    }
 }
